@@ -1,0 +1,20 @@
+name: WarpPluginExtra
+version: @version@
+main: org.VoyagerStar.warpPluginExtra.WarpPluginExtra
+api-version: '1.18'
+prefix: WarpPluginExtra
+authors: [ VoyagerStar ]
+description: Some extra functions for WarpPlugin
+website: https://github.com/VoyagerStar3897081534/WarpPluginExtra
+
+commands:
+    wpextra:
+        description: WarpPluginExtra command
+        usage: "/wpextra [help|reload|info|wpinfo]"
+        aliases: [ wpe ]
+        permission: wpextra.admin
+
+permissions:
+    warppluginextra.admin:
+        description: WarpPluginExtra admin permission
+        default: op

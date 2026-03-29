@@ -10,16 +10,18 @@ plugins {
 def getGitCommitHash() {
     try {
         def stdout = new ByteArrayOutputStream()
+        def stderr = new ByteArrayOutputStream()
         exec {
             commandLine 'git', 'rev-parse', '--short', 'HEAD'
             standardOutput = stdout
-            // 忽略错误输出，我们手动处理
+            errorOutput = stderr
             ignoreExitValue = true
         }
-        if (stdout.toString().trim().isEmpty()) {
+        def hash = stdout.toString().trim()
+        if (hash.isEmpty()) {
             return generateRandomHash()
         }
-        return stdout.toString().trim()
+        return hash
     } catch (Exception e) {
         println("Git not available or no commits yet, using random hash: " + e.message)
         return generateRandomHash()
@@ -71,7 +73,7 @@ tasks {
   }
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 21
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
