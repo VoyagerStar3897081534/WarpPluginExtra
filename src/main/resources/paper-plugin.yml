@@ -1,0 +1,9 @@
+name: WarpPluginExtra
+version: '1.0'
+main: org.VoyagerStar.warpPluginExtra.WarpPluginExtra
+api-version: '1.18'
+prefix: PFC-Lib
+load: STARTUP
+authors: [ VoyagerStar ]
+description: Some extra functions for WarpPlugin
+website: https://github.com/VoyagerStar3897081534/WarpPluginExtra

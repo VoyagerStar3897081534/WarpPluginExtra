@@ -1,0 +1,13 @@
+rootProject.name = 'WarpPluginExtra'
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven {
+            name = "papermc-repo"
+            url = "https://repo.papermc.io/repository/maven-public/"
+        }
+    }
+}
