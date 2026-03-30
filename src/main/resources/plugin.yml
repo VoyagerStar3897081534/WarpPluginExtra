@@ -10,7 +10,7 @@ website: https://github.com/VoyagerStar3897081534/WarpPluginExtra
 commands:
     wpextra:
         description: WarpPluginExtra command
-        usage: "/wpextra [help|reload|info|wpinfo]"
+        usage: "/wpextra [help|reload|info|wpinfo|enableFunc|disableFunc]"
         aliases: [ wpe ]
         permission: wpextra.admin
 

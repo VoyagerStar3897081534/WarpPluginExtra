@@ -25,10 +25,13 @@ public class WPExtra implements CommandExecutor {
         }
 
         switch (args[0]) {
-            case "reload" -> WarpPluginExtra.instance.reload();
+            case "reload" -> {
+                WarpPluginExtra.instance.reload();
+                player.sendMessage(WarpPlugin.getMessages("success"));
+            }
             case "help" -> help(player);
             case "info" -> info(player);
-            case "wpinfo" -> player.sendMessage("WarpPlugin v" + WarpPlugin.getPlugin(WarpPlugin.class).getDescription().getVersion());
+            case "wpinfo" -> player.sendMessage("§bWarpPlugin v" + WarpPlugin.getPlugin(WarpPlugin.class).getDescription().getVersion());
         }
         return true;
     }
@@ -37,10 +40,11 @@ public class WPExtra implements CommandExecutor {
         player.sendMessage("§a/wpextra help : Show this help");
         player.sendMessage("§a/wpextra reload : Reload the plugin");
         player.sendMessage("§a/wpextra info : Show plugin info");
+        player.sendMessage("§a/wpextra wpinfo : Show WarpPlugin info");
     }
 
     private static void info(Player player) {
-        player.sendMessage("§aWarpPluginExtra v" + WarpPluginExtra.getPlugin(WarpPluginExtra.class).getDescription().getVersion());
-        player.sendMessage("§aAuthor: " + WarpPluginExtra.getPlugin(WarpPluginExtra.class).getDescription().getAuthors());
+        player.sendMessage("§bWarpPluginExtra v" + WarpPluginExtra.getPlugin(WarpPluginExtra.class).getDescription().getVersion());
+        player.sendMessage("§bAuthor: " + WarpPluginExtra.getPlugin(WarpPluginExtra.class).getDescription().getAuthors());
     }
 }

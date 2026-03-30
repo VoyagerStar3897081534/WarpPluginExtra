@@ -38,16 +38,28 @@ public final class WarpPluginExtra extends JavaPlugin {
         
         // 显示所有传送点的信标光束
         BeaconBeamListener.showAllBeams();
+        
+        // 启动文件监听器，检测新添加的传送点
+        BeaconBeamListener.startWarpFileWatcher();
+        getLogger().info("Warp file watcher started!");
     }
 
     @Override
     public void onDisable() {
         getLogger().info("WarpPluginExtra is disabled!");
+        BeaconBeamManager.hideAllBeams();
     }
 
     public void reload() {
         wpdata = YamlConfiguration.loadConfiguration(new File(Objects.requireNonNull(getServer().getPluginManager().getPlugin("WarpPlugin")).getDataFolder(), "data.yml"));
         wpmessage = YamlConfiguration.loadConfiguration(new File(Objects.requireNonNull(getServer().getPluginManager().getPlugin("WarpPlugin")).getDataFolder(), "message.yml"));
         this.reloadConfig();
+        
+        // 重置并重新显示所有光柱
+        BeaconBeamListener.resetDisplayedWarps();
+        BeaconBeamManager.hideAllBeams();
+        BeaconBeamListener.showAllBeams();
+        
+        getLogger().info("WPE Reloaded!");
     }
 }

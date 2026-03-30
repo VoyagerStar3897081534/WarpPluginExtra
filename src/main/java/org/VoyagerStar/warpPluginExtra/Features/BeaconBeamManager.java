@@ -1,9 +1,6 @@
 package org.VoyagerStar.warpPluginExtra.Features;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
+import org.bukkit.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,21 +15,10 @@ public class BeaconBeamManager {
     public static void showBeam(World world, double x, double y, double z, String beamId) {
         Location loc = new Location(world, x, y, z);
         
-        // 添加到活动光束列表
         activeBeams.computeIfAbsent(beamId, k -> new ArrayList<>()).add(loc);
         
-        // 启动定时任务更新光束
         if (taskId == -1) {
             startBeamTask();
-        }
-    }
-
-    public static void hideBeam(String beamId) {
-        activeBeams.remove(beamId);
-        
-        // 如果没有光束了，停止任务
-        if (activeBeams.isEmpty()) {
-            stopBeamTask();
         }
     }
 
@@ -41,42 +27,80 @@ public class BeaconBeamManager {
         stopBeamTask();
     }
 
+    public static void hideBeam(String beamId) {
+        activeBeams.remove(beamId);
+        if (activeBeams.isEmpty()) {
+            stopBeamTask();
+        }
+    }
+
     private static void startBeamTask() {
+        Particle.DustOptions dustOptions = new Particle.DustOptions(
+                Color.fromRGB(0, 0, 255),
+                1.0f
+        );
+        Particle.DustOptions dustOptionsMain = new Particle.DustOptions(
+                Color.fromRGB(255, 0, 0),
+                1.0f
+        );
         taskId = Bukkit.getScheduler().runTaskTimer(
             org.VoyagerStar.warpPluginExtra.WarpPluginExtra.instance,
             () -> {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    for (List<Location> locations : activeBeams.values()) {
-                        for (Location loc : locations) {
-                            // 发送粒子效果
-                            player.spawnParticle(
-                                org.bukkit.Particle.END_ROD,
-                                loc.clone().add(0.5, 0, 0.5),
-                                10,
-                                0.1, 0.1, 0.1,
-                                0.01
-                            );
-                            player.spawnParticle(
-                                org.bukkit.Particle.END_ROD,
-                                loc.clone().add(0.5, 1, 0.5),
-                                10,
-                                0.1, 0.1, 0.1,
-                                0.01
-                            );
-                            player.spawnParticle(
-                                org.bukkit.Particle.END_ROD,
-                                loc.clone().add(0.5, 2, 0.5),
-                                10,
-                                0.1, 0.1, 0.1,
-                                0.01
-                            );
-                        }
+                if (activeBeams.isEmpty()) {
+                    return;
+                }
+
+                for (List<Location> locations : activeBeams.values()) {
+                    Location baseLoc = locations.getFirst();
+                    World world = baseLoc.getWorld();
+                    if (world == null) continue;
+
+                    for (double yOffset = -64; yOffset < 319; yOffset += 1) {
+                        Location centerLoc = baseLoc.clone();
+                        centerLoc.setY(yOffset);
+                        spawnParticle(world, centerLoc, yOffset == baseLoc.getY() ? dustOptionsMain : dustOptions);
+                        
+                        double radius = 0.5;
+                        
+                        Location upLoc = baseLoc.clone().add(0, yOffset + radius, 0);
+                        spawnParticle(world, upLoc, dustOptions);
+                        
+                        Location downLoc = baseLoc.clone().add(0, yOffset - radius, 0);
+                        spawnParticle(world, downLoc, dustOptions);
+                        
+                        Location leftLoc = baseLoc.clone().add(radius, yOffset, 0);
+                        spawnParticle(world, leftLoc, dustOptions);
+                        
+                        Location rightLoc = baseLoc.clone().add(-radius, yOffset, 0);
+                        spawnParticle(world, rightLoc, dustOptions);
+                        
+                        Location neLoc = baseLoc.clone().add(radius, yOffset, radius);
+                        spawnParticle(world, neLoc, dustOptions);
+                        
+                        Location nwLoc = baseLoc.clone().add(-radius, yOffset, radius);
+                        spawnParticle(world, nwLoc, dustOptions);
+                        
+                        Location seLoc = baseLoc.clone().add(radius, yOffset, -radius);
+                        spawnParticle(world, seLoc, dustOptions);
+                        
+                        Location swLoc = baseLoc.clone().add(-radius, yOffset, -radius);
+                        spawnParticle(world, swLoc, dustOptions);
                     }
                 }
             },
             0L,
-            20L // 每秒更新一次
+            20L
         ).getTaskId();
+    }
+
+    private static void spawnParticle(World world, Location loc, Particle.DustOptions options) {
+        world.spawnParticle(
+                Particle.REDSTONE,
+                loc,
+                1,
+                0, 0, 0, 0,
+                options
+        );
     }
 
     private static void stopBeamTask() {

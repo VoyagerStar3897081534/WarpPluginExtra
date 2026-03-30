@@ -51,17 +51,18 @@ def static getCurrentDate() {
     return dateFormat.format(date)
 }
 
-group = 'top.mc_plfd_host'
+group = 'org.VoyagerStar'
+def wpversion = project."warpplugin-version"
 
 if (project."complex-package-version".toBoolean()) {
-    version = project."package-version" + "-" + project."package-type" + "+" + getCurrentDate() + getGitCommitHash()
+    version = project."package-version" + "-" + project."package-type" + "+" + getCurrentDate() + getGitCommitHash() + "--WP" + wpversion
 } else {
     version = project."package-version"
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
-    implementation('com.github.Kush-ShuL:WarpPlugin:1.0.0-SANPSHOT')
+    implementation("com.github.Kush-ShuL:WarpPlugin:${wpversion}")
 }
 
 tasks {
@@ -70,6 +71,18 @@ tasks {
     // This is the only required configuration besides applying the plugin.
     // Your plugin's jar (or shadowJar if present) will be used automatically.
     minecraftVersion("1.21.11")
+    
+    doFirst {
+      def warpPluginFiles = configurations.detachedConfiguration(
+        dependencies.create('com.github.Kush-ShuL:WarpPlugin:' + wpversion)
+      ).files
+      def warpPluginFile = warpPluginFiles.find { it.name.endsWith('.jar') }
+      copy {
+        from warpPluginFile
+        into file('run/plugins')
+        rename { 'WarpPlugin.jar' }
+      }
+    }
   }
 }
 
