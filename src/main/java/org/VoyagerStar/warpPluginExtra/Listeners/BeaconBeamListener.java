@@ -45,7 +45,7 @@ public class BeaconBeamListener implements Listener {
                     }
                 }
             }
-        }.runTaskTimer(WarpPluginExtra.instance, 100L, 40L);
+        }.runTaskTimer(WarpPluginExtra.instance, 100L, 100L);
     }
 
     private static void checkNewWarps() {
