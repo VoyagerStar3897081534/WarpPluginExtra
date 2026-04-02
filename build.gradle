@@ -55,7 +55,7 @@ group = 'org.VoyagerStar'
 def wpversion = project."warpplugin-version"
 
 if (project."complex-package-version".toBoolean()) {
-    version = project."package-version" + "-" + project."package-type" + "+" + getCurrentDate() + getGitCommitHash() + "--WP" + wpversion
+    version = project."package-version" + "-" + project."package-type" + "+" + getCurrentDate() + getGitCommitHash() + "-WP" + wpversion
 } else {
     version = project."package-version"
 }

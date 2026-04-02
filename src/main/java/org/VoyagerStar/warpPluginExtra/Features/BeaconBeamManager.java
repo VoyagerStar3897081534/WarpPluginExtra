@@ -58,7 +58,9 @@ public class BeaconBeamManager {
                     for (double yOffset = -64; yOffset < 319; yOffset += 1) {
                         Location centerLoc = baseLoc.clone();
                         centerLoc.setY(yOffset);
-                        spawnParticle(world, centerLoc, yOffset == baseLoc.getY() ? dustOptionsMain : dustOptions);
+                        // 使用四舍五入的方式匹配非整数 Y 坐标
+                        boolean isCenter = yOffset == Math.round(baseLoc.getY());
+                        spawnParticle(world, centerLoc, isCenter ? dustOptionsMain : dustOptions);
                         
                         double radius = 0.5;
                         
